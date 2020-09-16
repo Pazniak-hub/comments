@@ -45,6 +45,3 @@ function render () {
 	document.body.append(newComment);
 }
 
-
-
-
