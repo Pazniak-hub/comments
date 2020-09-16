@@ -43,5 +43,5 @@ function render () {
 	//Добавляем в конец таблицы
 	}
 	document.body.append(newComment);
-}
+    }
 
