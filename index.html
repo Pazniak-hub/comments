@@ -7,6 +7,22 @@
 </head>
 <body>
 <div id="main"></div>
+<form name="comment">
+  <p>
+    <label>Автор:</label>
+    <input type="text" name="name" id="text"/>
+  </p>
+  <p>
+    <label>Комментарий:</label>
+    <br />
+    <textarea name="text_comment" cols="50" rows="10" id="text_comment"></textarea>
+  </p>
+  <p>
+    <input type="hidden" name="page_id" value="150" />
+    <input type="submit" value="Отправить" id="submit"/>
+    <input type="checkbox"><label>Можно удалить</label>
+  </p>
+</form>
 <script src=script/script.js></script>
 </body>
 </html>
