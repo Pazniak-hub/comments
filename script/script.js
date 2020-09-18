@@ -25,12 +25,16 @@ const comments = [{
 		},
 	],
 	newComment = document.createElement('div'),
+	newButton = document.createElement('input'),
 	commentsToBeShown = 3, //Количество показываемых комментариев
 	form = document.querySelector('form'), //Форма
 	loginField = document.getElementById('login'), //Поле логина
 	commentField = document.getElementById('text_comment'); //Поле комментария
 
-let showncomments = []; //Второй массив
+let showncomments = [], //Второй массив
+	logPage = newComment.getElementsByClassName('comments__item-subtitle'),
+	comPage = newComment.getElementsByClassName('comments__item-descr'),
+	butPage = newComment.getElementsByClassName('comments__delete');
 
 
 /**
@@ -50,8 +54,8 @@ function addingToArray() {
 function renderComments() { //Вставляем элемент в файл
 	for (let key = 0; key < showncomments.length; key++) {
 		newComment.innerHTML += `
-            <h1 class="menu__item-subtitle">${showncomments[key].login}</h1>
-			<div class="menu__item-descr">${showncomments[key].comment}</div>
+            <h1 class="comments__item-subtitle">${showncomments[key].login}</h1>
+			<div class="comments__item-descr">${showncomments[key].comment}</div>
 			`;
 
 	}
@@ -59,13 +63,25 @@ function renderComments() { //Вставляем элемент в файл
 }
 
 function deleteOldComments() { //Удаляем старые комментарии
-	let logPage = document.getElementsByClassName('menu__item-subtitle'),
-		comPage = document.getElementsByClassName('menu__item-descr');
+
 
 	while (logPage[0] && comPage[0]) {
 		logPage[0].remove();
 		comPage[0].remove();
+
+		if (butPage.length >= 1) {
+			butPage[0].remove();
+		}
+
 	}
+}
+
+function addDeleteButton() {//Добавляем кнопку удаления к нашему комментарию
+	newButton.setAttribute('type', 'button');
+	newButton.setAttribute('value', 'Удалить');
+	newButton.setAttribute('class', 'comments__delete');
+	newComment.childNodes[1].after(newButton);
+
 }
 
 form.addEventListener('submit', (e) => { //Обрабатываем форму
@@ -81,6 +97,16 @@ form.addEventListener('submit', (e) => { //Обрабатываем форму
 	});
 	form.reset();
 
+	deleteOldComments();
+	addingToArray();
+	addDeleteButton();
+
+});
+
+newButton.addEventListener('click', () => {//Обрабаотываем кнопку удаления
+
+	butPage[0].remove();
+	showncomments = [];
 	deleteOldComments();
 	addingToArray();
 
