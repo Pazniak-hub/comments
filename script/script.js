@@ -1,62 +1,73 @@
 'use strict';
 //Отслеживаем загрузку
-document.body.onload = addingToArray;
+document.body.onload = selectCommentsToShow;
 
 //Массив комментариев
-const comments = [{
+const commentsArray = [{
 			login: 'Alex',
-			comment: 'Что хотел сказать автор?'
+			comment: 'Что хотел сказать автор?',
+			isPredefined: true
 		},
 		{
 			login: 'Leo',
-			comment: 'Блять'
+			comment: 'Блять',
+			isPredefined: true
 		},
 		{
 			login: 'Garry',
-			comment: 'Ахахаха'
+			comment: 'Ахахаха',
+			isPredefined: true
+
 		},
 		{
 			login: 'Dovlatov',
-			comment: 'И был таков'
+			comment: 'И был таков',
+			isPredefined: true
 		},
 		{
 			login: 'Sasha',
-			comment: 'Ашчушчэния не те'
+			comment: 'Ашчушчэния не те',
 		},
 	],
 	newComment = document.createElement('div'),
-	newButton = document.createElement('input'),
 	commentsToBeShown = 3, //Количество показываемых комментариев
+	deleteButtonsCount = 1,
 	form = document.querySelector('form'), //Форма
 	loginField = document.getElementById('login'), //Поле логина
-	commentField = document.getElementById('text_comment'); //Поле комментария
+	commentField = document.getElementById('text_comment'), //Поле комментария
+	comments = newComment.getElementsByClassName('comments__item-full'),//Блоки комментариев
+	deleteButtons = newComment.getElementsByTagName('input');//Коллекция кнопок удаления
 
-let showncomments = [], //Второй массив
-	logPage = newComment.getElementsByClassName('comments__item-subtitle'),
-	comPage = newComment.getElementsByClassName('comments__item-descr'),
-	butPage = newComment.getElementsByClassName('comments__delete');
-
+let shownComments = []; //Второй массив
 
 /**
  * Функция, которая прогоняет элементы массива
  */
-function addingToArray() {
-	while (showncomments.length !== commentsToBeShown) {
-		let b = Math.floor(Math.random() * comments.length); //Великий рандомный идентификатор
+function selectCommentsToShow() {
+	while (shownComments.length !== commentsToBeShown) {
+		let b = Math.floor(Math.random() * commentsArray.length); //Великий рандомный идентификатор
 
-		if (!showncomments.includes(comments[b])) { //Элементы не должны повторяться
-			showncomments.push(comments[b]); //Добавляем уникальный элемент
+		if (!shownComments.includes(commentsArray[b])) { //Элементы не должны повторяться
+			shownComments.push(commentsArray[b]); //Добавляем уникальный элемент
 		}
 	}
 	renderComments(); //Размещаем на странице
 }
 
 function renderComments() { //Вставляем элемент в файл
-	for (let key = 0; key < showncomments.length; key++) {
-		newComment.innerHTML += `
-            <h1 class="comments__item-subtitle">${showncomments[key].login}</h1>
-			<div class="comments__item-descr">${showncomments[key].comment}</div>
-			`;
+	for (let key = 0; key < shownComments.length; key++) {
+		newComment.innerHTML += `<div class="comments__item-full">
+            <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
+			<div class="comments__item-descr">${shownComments[key].comment}</div>
+			</div>`;
+
+		if (shownComments[key].isPredefined == false) {//Добавляем кнопку для введённого вручную комментария
+			newComment.innerHTML = `<div class="comments__item-full">
+            <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
+			<div class="comments__item-descr">${shownComments[key].comment}</div>
+			<input type="button" class="comments__delete" value="Удалить"></input>
+			</div>`;
+		}
 
 	}
 	document.body.insertBefore(newComment, form); //Добавляем пере формой
@@ -65,23 +76,10 @@ function renderComments() { //Вставляем элемент в файл
 function deleteOldComments() { //Удаляем старые комментарии
 
 
-	while (logPage[0] && comPage[0]) {
-		logPage[0].remove();
-		comPage[0].remove();
-
-		if (butPage.length >= 1) {
-			butPage[0].remove();
-		}
+	while (comments[0]) {
+		comments[0].remove();
 
 	}
-}
-
-function addDeleteButton() {//Добавляем кнопку удаления к нашему комментарию
-	newButton.setAttribute('type', 'button');
-	newButton.setAttribute('value', 'Удалить');
-	newButton.setAttribute('class', 'comments__delete');
-	newComment.childNodes[1].after(newButton);
-
 }
 
 form.addEventListener('submit', (e) => { //Обрабатываем форму
@@ -90,24 +88,24 @@ form.addEventListener('submit', (e) => { //Обрабатываем форму
 	let loginText = loginField.value,
 		commentText = commentField.value;
 
-	showncomments = [];
-	showncomments.push({
+	shownComments = [];
+	shownComments.push({
 		login: loginText,
-		comment: commentText
+		comment: commentText,
+		isPredefined: false
 	});
 	form.reset();
 
 	deleteOldComments();
-	addingToArray();
-	addDeleteButton();
+	selectCommentsToShow();
 
-});
+	for (var i = 0; i < deleteButtons.length; i++) {
+		deleteButtons[i].addEventListener('click', () => {//обрабатываем коллекцию кнопок
 
-newButton.addEventListener('click', () => {//Обрабаотываем кнопку удаления
-
-	butPage[0].remove();
-	showncomments = [];
-	deleteOldComments();
-	addingToArray();
-
+			console.log('Кнопка нажата!');
+			shownComments = [];
+			deleteOldComments();
+			selectCommentsToShow();
+		});
+	}
 });
