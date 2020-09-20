@@ -56,18 +56,22 @@ function selectCommentsToShow() {
 
 function renderComments() { //Вставляем элемент в файл
 	for (let key = 0; key < shownComments.length; key++) {
-		newComment.innerHTML += `<div class="comments__item-full">
-            <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
-			<div class="comments__item-descr">${shownComments[key].comment}</div>
-			</div>`;
-
 		if (shownComments[key].isPredefined == false) {//Добавляем кнопку для введённого вручную комментария
 			newComment.innerHTML = `<div class="comments__item-full">
             <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
 			<div class="comments__item-descr">${shownComments[key].comment}</div>
 			<input type="button" class="comments__delete" value="Удалить"></input>
 			</div>`;
+		} else {
+			newComment.innerHTML += `<div class="comments__item-full">
+            <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
+			<div class="comments__item-descr">${shownComments[key].comment}</div>
+			</div>`;
 		}
+
+		
+
+
 
 	}
 	document.body.insertBefore(newComment, form); //Добавляем пере формой
