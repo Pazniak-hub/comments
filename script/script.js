@@ -36,7 +36,7 @@ const commentsArray = [{
 	loginField = document.getElementById('login'), //Поле логина
 	commentField = document.getElementById('text_comment'), //Поле комментария
 	comments = newComment.getElementsByClassName('comments__item-full'),//Блоки комментариев
-	deleteButtons = newComment.getElementsByTagName('input');//Коллекция кнопок удаления
+	deleteButtonsArray = newComment.getElementsByTagName('input');//Коллекция кнопок удаления
 
 let shownComments = []; //Второй массив
 
@@ -54,35 +54,24 @@ function selectCommentsToShow() {
 	renderComments(); //Размещаем на странице
 }
 
-function renderComments() { //Вставляем элемент в файл
+function renderComments() { //Размещаем комментарии на странице
 	for (let key = 0; key < shownComments.length; key++) {
-		if (shownComments[key].isPredefined == false) {//Добавляем кнопку для введённого вручную комментария
-			newComment.innerHTML = `<div class="comments__item-full">
-            <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
-			<div class="comments__item-descr">${shownComments[key].comment}</div>
-			<input type="button" class="comments__delete" value="Удалить"></input>
-			</div>`;
-		} else {
 			newComment.innerHTML += `<div class="comments__item-full">
             <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
 			<div class="comments__item-descr">${shownComments[key].comment}</div>
 			</div>`;
+
+			if (shownComments[key].isPredefined == false) {//Добавляем кнопку удаления для введённого вручную комментария
+				newComment.childNodes[key].insertAdjacentHTML('beforeend', '<input type="button" class="comments__delete" value="Удалить"></input>');
+			}
 		}
-
-		
-
-
-
-	}
-	document.body.insertBefore(newComment, form); //Добавляем пере формой
+	document.body.insertBefore(newComment, form); //Добавляем перед формой
 }
 
 function deleteOldComments() { //Удаляем старые комментарии
 
-
 	while (comments[0]) {
 		comments[0].remove();
-
 	}
 }
 
@@ -103,10 +92,9 @@ form.addEventListener('submit', (e) => { //Обрабатываем форму
 	deleteOldComments();
 	selectCommentsToShow();
 
-	for (var i = 0; i < deleteButtons.length; i++) {
-		deleteButtons[i].addEventListener('click', () => {//обрабатываем коллекцию кнопок
+	for (var i = 0; i < deleteButtonsArray.length; i++) {
+		deleteButtonsArray[i].addEventListener('click', () => {//обрабатываем коллекцию кнопок
 
-			console.log('Кнопка нажата!');
 			shownComments = [];
 			deleteOldComments();
 			selectCommentsToShow();
