@@ -33,10 +33,8 @@ const commentsArray = [{
 	commentsToBeShown = 3, //Количество показываемых комментариев
 	deleteButtonsCount = 1,
 	form = document.querySelector('form'), //Форма
-	loginField = document.getElementById('login'), //Поле логина
-	commentField = document.getElementById('text_comment'), //Поле комментария
-	comments = newComment.getElementsByClassName('comments__item-full'),//Блоки комментариев
-	deleteButtonsArray = newComment.getElementsByTagName('input');//Коллекция кнопок удаления
+	comments = newComment.getElementsByClassName('comments__item-full'), //Блоки комментариев
+	deleteButtonsArray = newComment.getElementsByClassName('comments__delete'); //Коллекция кнопок удаления
 
 let shownComments = []; //Второй массив
 
@@ -55,46 +53,38 @@ function selectCommentsToShow() {
 }
 
 function renderComments() { //Размещаем комментарии на странице
+	while (comments[0]) { //Удаляем старые комментарии
+		comments[0].remove();
+	}
+
 	for (let key = 0; key < shownComments.length; key++) {
-			newComment.innerHTML += `<div class="comments__item-full">
+		newComment.innerHTML += `<div class="comments__item-full">
             <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
 			<div class="comments__item-descr">${shownComments[key].comment}</div>
 			${shownComments[key].isPredefined == false ? '<input type="button" class="comments__delete" value="Удалить"></input>':''}
 			</div>`;
 
-		}
+	}
 	document.body.insertBefore(newComment, form); //Добавляем перед формой
 }
 
-function deleteOldComments() { //Удаляем старые комментарии
-
-	while (comments[0]) {
-		comments[0].remove();
-	}
-}
 
 form.addEventListener('submit', (e) => { //Обрабатываем форму
 	e.preventDefault();
 
-	let loginText = loginField.value,
-		commentText = commentField.value;
 
-	shownComments = [];
-	shownComments.push({
-		login: loginText,
-		comment: commentText,
+	shownComments = [{
+		login: document.getElementById('login').value,
+		comment: document.getElementById('text_comment').value,
 		isPredefined: false
-	});
+	}];
 	form.reset();
-
-	deleteOldComments();
 	selectCommentsToShow();
 
 	for (var i = 0; i < deleteButtonsArray.length; i++) {
-		deleteButtonsArray[i].addEventListener('click', () => {//обрабатываем коллекцию кнопок
+		deleteButtonsArray[i].addEventListener('click', () => { //обрабатываем коллекцию кнопок
 
 			shownComments = [];
-			deleteOldComments();
 			selectCommentsToShow();
 		});
 	}
