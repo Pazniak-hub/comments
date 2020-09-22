@@ -59,11 +59,9 @@ function renderComments() { //Размещаем комментарии на с�
 			newComment.innerHTML += `<div class="comments__item-full">
             <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
 			<div class="comments__item-descr">${shownComments[key].comment}</div>
+			${shownComments[key].isPredefined == false ? '<input type="button" class="comments__delete" value="Удалить"></input>':''}
 			</div>`;
 
-			if (shownComments[key].isPredefined == false) {//Добавляем кнопку удаления для введённого вручную комментария
-				newComment.childNodes[key].insertAdjacentHTML('beforeend', '<input type="button" class="comments__delete" value="Удалить"></input>');
-			}
 		}
 	document.body.insertBefore(newComment, form); //Добавляем перед формой
 }
