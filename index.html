@@ -3,26 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
   <title>Document</title>
 </head>
 <body>
 <div id="main"></div>
 <form name="comment">
   <p>
-    <label>Автор:</label>
+    <label class="form__text">Автор:</label>
     <input type="text" name="name" id="login"/>
   </p>
   <p>
-    <label>Комментарий:</label>
+    <label class="form__text">Комментарий:</label>
     <br />
-    <textarea name="text_comment" cols="50" rows="10" id="text_comment"></textarea>
+    <textarea class="form__text" name="text_comment" cols="50" rows="10" id="text_comment"></textarea>
   </p>
   <p>
     <input type="hidden" name="page_id" value="150" />
-    <input type="submit" value="Отправить" id="submit"/>
-    <input type="checkbox"><label>Можно удалить</label>
+    <input type="submit" class="submit__button" value="Отправить" id="submit"/>
+    <input type="checkbox" checked id="can_delete"><label class="form__text">Можно удалить</label>
   </p>
 </form>
+<div id="areYouSure" class="popup">
+  <div class="popup__body">
+    <div class="popup__content">
+      <div class="popup__title">Ты точно хочешь удалить комментарий?</div>
+      <input type="button" class="comments__delete" id="btnYes" value="Да"></input>
+      <input type="button" class="comments__delete" id="btnNo" value="Нет"></input>
+    </div>
+  </div>
+</div>
+<div id="СommentIsDeleted" class="popup">
+  <div class="popup__body">
+    <div class="popup__content">
+      <div class="popup__title">Комментарий удалён</div>
+    </div>
+  </div>
+</div>
 <script src=script/script.js></script>
 </body>
 </html>
