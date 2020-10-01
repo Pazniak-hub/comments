@@ -6,33 +6,33 @@ document.body.onload = selectCommentsToShowAndRender;
 const commentsArray = [{
 			login: 'Alex',
 			comment: 'Что хотел сказать автор?',
-			isPredefined: true,
-			isChecked: false
+			isDeletable: false,
+
 		},
 		{
 			login: 'Leo',
 			comment: 'Блять',
-			isPredefined: true,
-			isChecked: false
+			isDeletable: false,
+
 		},
 		{
 			login: 'Garry',
 			comment: 'Ахахаха',
-			isPredefined: true,
-			isChecked: false
+			isDeletable: false,
+
 
 		},
 		{
 			login: 'Dovlatov',
 			comment: 'И был таков',
-			isPredefined: true,
-			isChecked: false
+			isDeletable: false,
+
 		},
 		{
 			login: 'Sasha',
 			comment: 'Ашчушчэния не те',
-			isPredefined: true,
-			isChecked: false
+			isDeletable: false,
+
 		},
 	],
 	newComment = document.createElement('div'),
@@ -41,15 +41,15 @@ const commentsArray = [{
 	form = document.querySelector('form'), //Форма
 	comments = newComment.getElementsByClassName('comments__item-full'), //Блоки комментариев
 	deleteButtonsArray = newComment.getElementsByClassName('comments__delete'), //Коллекция кнопок удаления
-	checkCanDelete = document.getElementById('can_delete'),//Чекбокс для удаления
-	areYouSurePopup = document.getElementById('areYouSure');//Модальное окно
+	checkCanDelete = document.getElementById('can_delete'); //Чекбокс для удаления
 
 let shownComments = []; //Второй массив
+
 
 /**
  * Функция, которая прогоняет элементы массива
  */
-function selectCommentsToShowAndRender(callback) {
+function selectCommentsToShowAndRender() {
 	while (shownComments.length !== commentsToBeShown) {
 		let b = Math.floor(Math.random() * commentsArray.length); //Великий рандомный идентификатор
 
@@ -57,18 +57,11 @@ function selectCommentsToShowAndRender(callback) {
 			shownComments.push(commentsArray[b]); //Добавляем уникальный элемент
 		}
 	}
-	
 	deleteOldComments();
-	if (callback && typeof callback ==="function") {
+	renderNewComments();
 
-		callback();
-		setTimeout(renderNewComments, 2000);	
-
-	} else {
-		renderNewComments();
-		
-	}
 }
+
 
 function deleteOldComments() {
 	while (comments[0]) { //Удаляем старые комментарии
@@ -77,21 +70,33 @@ function deleteOldComments() {
 }
 
 function renderNewComments() { //Размещаем комментарии на странице
- for (let key = 0; key < shownComments.length; key++) {
+	for (let key = 0; key < shownComments.length; key++) {
 		newComment.innerHTML += `<div class="comments__item-full">
             <h1 class="comments__item-subtitle">${shownComments[key].login}</h1>
 			<div class="comments__item-descr">${shownComments[key].comment}</div>
-			${(shownComments[key].isPredefined == false && shownComments[key].isChecked == true) ? '<input type="button" class="comments__delete" value="Удалить"></input>':''}
+			${(shownComments[key].isDeletable == true) ? '<input type="button" class="comments__delete" value="Удалить"></input>':''}
 			</div>`;
 
 	}
 	document.body.insertBefore(newComment, form); //Добавляем перед формой
-	shownComments = [];//Очищаем массив
+	shownComments = []; //Очищаем массив
 }
 
-function showCommentIsDeleted() {
-	areYouSurePopup.style.display = 'none';
-			document.getElementById('СommentIsDeleted').style.display = 'block';
+
+async function areYouSure() {
+	if (await confirm('Ты уверен?')) {
+		deleteOldComments();
+		const promise = new Promise((resolve) => {
+			setTimeout(() => {
+				resolve('Комментарий удалён');
+			}, 100);
+		});
+
+		promise.then((value) => {
+			alert(value);
+
+		}).then(() => selectCommentsToShowAndRender());
+	}
 }
 
 form.addEventListener('submit', (e) => { //Обрабатываем форму
@@ -101,22 +106,14 @@ form.addEventListener('submit', (e) => { //Обрабатываем форму
 	shownComments = [{
 		login: document.getElementById('login').value,
 		comment: document.getElementById('text_comment').value,
-		isPredefined: false,
-		isChecked: checkCanDelete.checked
+		isDeletable: checkCanDelete.checked
 	}];
 	form.reset();
 	selectCommentsToShowAndRender();
 
 	for (var i = 0; i < deleteButtonsArray.length; i++) {
-		deleteButtonsArray[i].addEventListener('click', () => { //обрабатываем коллекцию кнопок
-			areYouSurePopup.style.display = 'block';//Появляется попап
-
-			document.getElementById('btnYes').addEventListener('click', () => {//Обрабатываем кнопку "Да"
-			selectCommentsToShowAndRender(showCommentIsDeleted);
-			});
-			document.getElementById('btnNo').addEventListener('click', () => {//Обрабатываем кнопку "Нет"
-				areYouSurePopup.style.display = 'none';
-			});
+		deleteButtonsArray[i].addEventListener('click', () => {
+			areYouSure();
 		});
 	}
 });

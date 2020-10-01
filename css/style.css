@@ -1,36 +1,5 @@
 @charset "UTF-8";
 
-
-.popup{
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.107);
-    top: 0;
-    left: 0;
-    display: none;
-}
-.popup__body{
-    min-height: 100%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 30px 10px;
-    
-}
-.popup__content{
-    background-color: rgb(224, 224, 224);
-    color: black;
-    max-width: 500px;
-    text-align: center;
-    position: relative;
-    border: 1px solid;
-    border-width: 4px 4px 4px 4px;
-}
-.popup__title{
-    font-size: 30px;
-    margin: 0px 0px 1em 0px;
-}
 .comments__delete{
   font-weight: 700;
   color: white;
