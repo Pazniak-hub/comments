@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Document</title>
 </head>
 <body>
 <div id="main"></div>
 <form name="comment">
-  <p>
-    <label class="form__text">Автор:</label>
-    <input type="text" name="name" id="login"/>
-  </p>
-  <p>
-    <label class="form__text">Комментарий:</label>
-    <br />
-    <textarea class="form__text" name="text_comment" cols="50" rows="10" id="text_comment"></textarea>
-  </p>
-  <p>
-    <input type="hidden" name="page_id" value="150" />
-    <input type="submit" class="submit__button" value="Отправить" id="submit"/>
-    <input type="checkbox" checked id="can_delete"><label class="form__text">Можно удалить</label>
-  </p>
+    <p>
+        <label class="form__text">Автор:</label>
+        <input type="text" name="name" id="login"/>
+    </p>
+    <p>
+        <label class="form__text">Комментарий:</label>
+        <br/>
+        <textarea class="form__text" name="text_comment" cols="50" rows="10" id="text_comment"></textarea>
+    </p>
+    <p>
+        <input type="hidden" name="page_id" value="150"/>
+        <input type="submit" class="submit__button" value="Отправить" id="submit"/>
+        <input type="checkbox" checked id="can_delete"><label class="form__text">Можно удалить</label>
+    </p>
 </form>
-<script src=script/script.js></script>
+<script src="script/script.js"></script>
 </body>
 </html>
 

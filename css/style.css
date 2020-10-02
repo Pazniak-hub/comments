@@ -1,17 +1,8 @@
 @charset "UTF-8";
 
-.comments__delete{
-  font-weight: 700;
-  color: white;
-  text-decoration: none;
-  padding: .8em 1em calc(.8em + 3px);
-  border-radius: 3px;
-  background: black;
-  transition: 0.2s;
-}
-.submit__button{
+.submit__button {
     display: inline-block;
-    color:black;
+    color: black;
     font-weight: 700;
     text-decoration: none;
     user-select: none;
@@ -21,17 +12,27 @@
     border-radius: 1px;
     transition: 0.2s;
 }
-.comments__item-subtitle{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-weight: bolder;
 
-}
- .comments__item-descr{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-weight: normal;
-} 
-.form__text{
+.form__text {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 100;
     font-size: small;
+}
+
+.comments__item-full {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: normal;
+}
+
+.comments__item-subtitle {
+    font-weight: bolder;
+}
+
+.comments__delete {
+    color: white;
+    text-decoration: none;
+    padding: .8em 1em calc(.8em + 3px);
+    border-radius: 3px;
+    background: black;
+    transition: 0.2s;
 }
