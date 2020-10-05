@@ -28,6 +28,12 @@
     font-weight: bolder;
 }
 
+.comments__item-date {
+    font-size: small;
+    font-weight: 50;
+    font-style: italic;
+}
+
 .comments__delete {
     color: white;
     text-decoration: none;
