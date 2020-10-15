@@ -63,16 +63,15 @@ const commentsArray = [{
     ],
     commentsContainer = document.createElement('div'),
     form = document.querySelector('form'),
+    commentsElements = commentsContainer.getElementsByClassName('comments__item-full'),
 
     COMMENTS_TO_BE_SHOWN = 3,
-    NOTIFICATION_SHOWN_TIMEOUT = 0.5 * 1000;
+    NOTIFICATION_SHOWN_TIMEOUT = 5 * 1000;
 
 let shownComments = []; //  Массив комментариев для отображения
 /**
- Заполняет и выводит массив комментариев для показа
+ Заполняет, сортирует и выводит массив комментариев для показа
  */
-
-//!  просто пример красивого синтаксиса (пользуйся, это современно!)
 const selectCommentsToShowAndRender = () => {
     while (shownComments.length <= COMMENTS_TO_BE_SHOWN - 1) {
         //  Великий рандомный идентификатор
@@ -95,8 +94,6 @@ const selectCommentsToShowAndRender = () => {
  Удаляет отображённые комментарии
  */
 const deleteOldComments = () => {
-
-    const commentsElements = commentsContainer.getElementsByClassName('comments__item-full');
     while (commentsElements[0]) {
         commentsElements[0].remove();
     }
@@ -120,12 +117,19 @@ const renderNewComments = () => {
     document.body.insertBefore(commentsContainer, form);
     shownComments = [];
 };
-
-
+/**
+ *  Вызывает и обрабатывает confirm 
+ */
 const areYouSure = async () => {
     const actionConfirmed = await confirm('Ты уверен?');
     if (actionConfirmed) {
-        deleteOldComments();
+
+        commentsElements[0].insertAdjacentHTML('beforeend',`<div>
+        <div>Комментарий будет удалён через <span id="time">5</span>...</div>
+        <input type="button" class="comments__delete" id="cancelutton" value="Отмена" />
+        `);  
+       let  display = document.querySelector('#time');
+        
         const promise = new Promise((resolve) => {
             setTimeout(() => {
                 resolve('Комментарий удалён');
@@ -133,6 +137,9 @@ const areYouSure = async () => {
         });
 
         promise.then(
+            clockUpdate(NOTIFICATION_SHOWN_TIMEOUT/1000,display)
+
+        ).then(
             (value) => {
                 alert(value);
             }
@@ -143,13 +150,31 @@ const areYouSure = async () => {
         });
     }
 };
-
-const formatDate = (d) => {//Функция, которая форматирует текущую дату
+/**
+ *  Форматируем дату
+ */
+const formatDate = (d) => {
 
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
     return monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+};
+
+/**
+ *  Обновляем таймер
+ */
+const clockUpdate = (duration, display) => {
+        let timer = duration, seconds;
+        setInterval(function () {
+            seconds = parseInt(timer % 60, 10);
+    
+            display.textContent = seconds;
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
+       
 };
 
 form.addEventListener('submit', (e) => {
@@ -162,7 +187,7 @@ form.addEventListener('submit', (e) => {
         isDeletable: document.getElementById('can_delete').checked
     }];
     form.reset();
-    //  дозаполняем массив комментариев и отображаем
+    //  Дозаполняем массив комментариев и отображаем
     selectCommentsToShowAndRender();
     addRemoveListeners();
 });
