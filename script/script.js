@@ -66,7 +66,8 @@ const commentsArray = [{
     commentsElements = commentsContainer.getElementsByClassName('comments__item-full'),
 
     COMMENTS_TO_BE_SHOWN = 3,
-    NOTIFICATION_SHOWN_TIMEOUT = 5 * 1000;
+    NOTIFICATION_SHOWN_TIMEOUT = 5 * 1000,
+    TIME_FOR_INTERVAL = 1 * 1000;
 
 let shownComments = []; //  Массив комментариев для отображения
 /**
@@ -82,8 +83,8 @@ const selectCommentsToShowAndRender = () => {
             shownComments.push(commentsArray[b]);
         }
     }
-    shownComments.sort(function (a, b) {//Сортируем массив от позднего к раннему
-        return  new Date(b.date) - new Date(a.date);
+    shownComments.sort(function (a, b) { //Сортируем массив от позднего к раннему
+        return new Date(b.date) - new Date(a.date);
     });
 
     deleteOldComments();
@@ -124,20 +125,32 @@ const areYouSure = async () => {
     const actionConfirmed = await confirm('Ты уверен?');
     if (actionConfirmed) {
 
-        commentsElements[0].insertAdjacentHTML('beforeend',`<div>
+        commentsElements[0].insertAdjacentHTML('beforeend', `<div id="cancelLine">
         <div>Комментарий будет удалён через <span id="time">5</span>...</div>
-        <input type="button" class="comments__delete" id="cancelutton" value="Отмена" />
-        `);  
-       let  display = document.querySelector('#time');
-        
+        <input type="button" class="comments__delete" id="cancelation" value="Отмена" />
+        </div>`);
+        let display = document.querySelector('#time');
+        const cancelButton = document.querySelector('#cancelation'),
+            cancelContainer = document.querySelector('#cancelLine');
+
         const promise = new Promise((resolve) => {
-            setTimeout(() => {
+            let countdown = setTimeout(() => {
                 resolve('Комментарий удалён');
             }, NOTIFICATION_SHOWN_TIMEOUT);
+
+            cancelButton.addEventListener('click', () => {
+
+                clearTimeout(countdown);
+                cancelContainer.remove();
+
+
+            });
         });
 
+
+
         promise.then(
-            clockUpdate(NOTIFICATION_SHOWN_TIMEOUT/1000,display)
+            showTimeToDelete(NOTIFICATION_SHOWN_TIMEOUT / 1000, display)
 
         ).then(
             (value) => {
@@ -162,19 +175,23 @@ const formatDate = (d) => {
 };
 
 /**
- *  Обновляем таймер
+ *  Показываем время до удаления 
  */
-const clockUpdate = (duration, display) => {
-        let timer = duration, seconds;
-        setInterval(function () {
-            seconds = parseInt(timer % 60, 10);
-    
-            display.textContent = seconds;
-            if (--timer < 0) {
-                timer = duration;
-            }
-        }, 1000);
-       
+const showTimeToDelete = (duration, display) => {
+    let timer = duration,
+        seconds;
+
+    const timerUpdate = () => {
+        seconds = parseInt(timer);
+
+        display.textContent = seconds;
+        if (--timer <= 0) {
+            timer = duration;
+        }
+    };
+    setInterval(timerUpdate, TIME_FOR_INTERVAL);
+    timerUpdate();
+
 };
 
 form.addEventListener('submit', (e) => {
