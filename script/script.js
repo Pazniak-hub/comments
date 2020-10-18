@@ -64,10 +64,12 @@ const commentsArray = [{
     commentsContainer = document.createElement('div'),
     form = document.querySelector('form'),
     commentsElements = commentsContainer.getElementsByClassName('comments__item-full'),
+    deleteButtonsArray = commentsContainer.getElementsByClassName('comments__delete'),
 
     COMMENTS_TO_BE_SHOWN = 3,
     NOTIFICATION_SHOWN_TIMEOUT = 5 * 1000,
-    TIME_FOR_INTERVAL = 1 * 1000;
+    SECONDS_TO_BE_SHOWN = NOTIFICATION_SHOWN_TIMEOUT / 1000,
+    INTERVAL_DELAY = 1 * 1000;
 
 let shownComments = []; //  Массив комментариев для отображения
 /**
@@ -125,23 +127,32 @@ const areYouSure = async () => {
     const actionConfirmed = await confirm('Ты уверен?');
     if (actionConfirmed) {
 
-        commentsElements[0].insertAdjacentHTML('beforeend', `<div id="cancelLine">
-        <div>Комментарий будет удалён через <span id="time">5</span>...</div>
-        <input type="button" class="comments__delete" id="cancelation" value="Отмена" />
+        commentsElements[0].insertAdjacentHTML('beforeend', `<div id="cancelationComment">
+        <div>Комментарий будет удалён через <span id="time"></span>...</div>
+        <input type="button" class="comments__delete" value="Отмена" />
         </div>`);
-        let display = document.querySelector('#time');
-        const cancelButton = document.querySelector('#cancelation'),
-            cancelContainer = document.querySelector('#cancelLine');
+        deleteButtonsArray[0].hidden = true;
 
-        const promise = new Promise((resolve) => {
-            let countdown = setTimeout(() => {
-                resolve('Комментарий удалён');
+        const cancelContainer = document.querySelector('#cancelationComment'),
+            timerDisplay = cancelContainer.querySelector('#time'),
+            cancelButton = cancelContainer.querySelector('.comments__delete');
+
+
+        const promise = new Promise((resolve, reject) => {
+            const countdown = setTimeout(() => {
+                if (shownComments.length == 0) {
+                    resolve('Комментарий удалён');
+                } else {
+                    reject('Ой, что-то пошло не так');
+                }
+
             }, NOTIFICATION_SHOWN_TIMEOUT);
 
             cancelButton.addEventListener('click', () => {
 
                 clearTimeout(countdown);
                 cancelContainer.remove();
+                deleteButtonsArray[0].hidden = false;
 
 
             });
@@ -150,49 +161,54 @@ const areYouSure = async () => {
 
 
         promise.then(
-            showTimeToDelete(NOTIFICATION_SHOWN_TIMEOUT / 1000, display)
+            showTimeToDelete(SECONDS_TO_BE_SHOWN, timerDisplay)
 
         ).then(
-            (value) => {
-                alert(value);
+            (notificationFromPromise) => {
+                alert(notificationFromPromise);
             }
         ).then(
             selectCommentsToShowAndRender
         ).catch((error) => {
-            console.error('Ой, что-то сломалось во время подтверждения удаления', error);
+            console.error(error);
         });
     }
 };
 /**
- *  Форматируем дату
+ *  Форматирует дату
  */
-const formatDate = (d) => {
+const formatDate = (unformattedDate) => {
 
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
-    return monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    return `${monthNames[unformattedDate.getMonth()]} ${unformattedDate.getDate()}, ${unformattedDate.getFullYear()}`;
 };
 
+
+
 /**
- *  Показываем время до удаления 
+ *  Считает и показывает время до удаления 
  */
 const showTimeToDelete = (duration, display) => {
+
     let timer = duration,
         seconds;
 
-    const timerUpdate = () => {
-        seconds = parseInt(timer);
-
-        display.textContent = seconds;
-        if (--timer <= 0) {
-            timer = duration;
+    function timeRender() {
+        seconds = timer;
+        if (timer != 0) { //Начинаем проводить расчёты
+            timer--;
         }
-    };
-    setInterval(timerUpdate, TIME_FOR_INTERVAL);
-    timerUpdate();
+        display.innerHTML = seconds; //Рендерим на странице
+
+    }
+    setInterval(timeRender, INTERVAL_DELAY);
+    timeRender();
 
 };
+
+
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -213,7 +229,6 @@ form.addEventListener('submit', (e) => {
  *  Добавляет функцию удаления на кнопки около комментариев
  */
 const addRemoveListeners = () => {
-    const deleteButtonsArray = commentsContainer.getElementsByClassName('comments__delete');
 
     for (let i = 0; i < deleteButtonsArray.length; i++) {
         const deleteButton = deleteButtonsArray[i];
